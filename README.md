@@ -1,5 +1,7 @@
 # Opportunity Tracker Bot (WhatsApp)
 
+[![CI](https://github.com/0dillon/monitor/actions/workflows/ci.yml/badge.svg)](https://github.com/0dillon/monitor/actions/workflows/ci.yml)
+
 Forward an opportunity (link, post, screenshot, flyer or PDF) to the bot's WhatsApp number. The bot:
 
 - researches it on the web (official page, deadline, eligibility, requirements, benefits) and saves it
@@ -55,6 +57,15 @@ docker logs -f opp-bot
 ```
 
 Avoid free tiers that sleep (e.g. Render free), because reminders won't fire while the bot is asleep.
+
+## Troubleshooting
+
+- **Pairing code expired or didn't work.** Codes only last about a minute. Restart the bot (or the Railway service) to get a fresh one, and make sure `PAIRING_NUMBER` is the number of the phone you're entering it on, with country code and no `+` or leading `0`.
+- **Logs say "Logged out from WhatsApp".** The bot was unlinked, either from the phone or because the phone was offline for too long. It clears the old session and exits, so restart it to get a new pairing code.
+- **The bot doesn't reply.** Check that `OWNER_NUMBER` is the number you're messaging from, in the same format. In self-chat mode, make sure you're writing in "Message yourself", not another chat.
+- **❌ reaction and "Something went wrong".** The logs show the real error. The usual causes are a missing or wrong `ANTHROPIC_API_KEY`, or no credit on the Anthropic account.
+- **Reminders at the wrong time.** Set `TIMEZONE` to your IANA zone, e.g. `Africa/Lagos`. The default is UTC.
+- **Everything is gone after a redeploy.** The `/data` volume isn't attached. Without it, the session and database are wiped on every deploy.
 
 ## Configuration
 
