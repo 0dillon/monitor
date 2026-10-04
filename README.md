@@ -1,6 +1,6 @@
 # Opportunity Tracker Bot (WhatsApp)
 
-Forward an opportunity (link, post, screenshot, flyer or PDF) to your WhatsApp "Message yourself" chat. The bot:
+Forward an opportunity (link, post, screenshot, flyer or PDF) to the bot's WhatsApp number. The bot:
 
 - researches it on the web (official page, deadline, eligibility, requirements, benefits) and saves it
 - tracks your progress from plain messages: "started #2", "submitted the Chevening one", "skip #5"
@@ -12,25 +12,29 @@ Shortcuts: `/list`, `/soon`, `/help`.
 
 ## How it connects
 
-It uses [Baileys](https://github.com/WhiskeySockets/Baileys) to link to WhatsApp as a **linked device**, the same way WhatsApp Web does. No extra number is needed: it listens only to your self-chat and ignores every other chat.
+It uses [Baileys](https://github.com/WhiskeySockets/Baileys) to link to WhatsApp as a **linked device**, the same way WhatsApp Web does. There are two ways to set it up:
+
+**Recommended: a second number for the bot.** Put WhatsApp (or WhatsApp Business) on a spare number, such as an old SIM or the second slot of a dual-SIM phone, and link the bot to it. Set `PAIRING_NUMBER` to the bot's number and `OWNER_NUMBER` to your own. Save the bot as a contact and chat with it like anyone else. Reminders arrive as normal messages, so your phone buzzes, and the bot ignores messages from anyone except `OWNER_NUMBER`.
+
+**No spare number: your own self-chat.** Leave `OWNER_NUMBER` empty and link the bot to your own WhatsApp. It only reads your "Message yourself" chat and ignores every other chat. The catch is that WhatsApp usually doesn't notify you about messages "from yourself", so reminders arrive silently.
+
+> 📱 The phone that holds the bot's number must open WhatsApp at least every ~14 days, or WhatsApp unlinks the bot.
 
 > ⚠️ Baileys is unofficial. For personal, low-volume use like this the risk is small, but WhatsApp could in theory restrict the linked session.
-
-> 🔕 **Reminders in self-chat may not buzz your phone.** WhatsApp usually doesn't notify you about messages "from yourself". If you want proper notifications, link the bot to a second number (an old SIM, a family member's spare line, or a WhatsApp Business number on a dual-SIM phone). Then set `OWNER_NUMBER` to your own number and chat with the bot like any contact.
 
 ## Run locally
 
 Requires Node 22.13+ and an [Anthropic API key](https://platform.claude.com).
 
 ```bash
-cp .env.example .env    # fill in ANTHROPIC_API_KEY, TIMEZONE, PAIRING_NUMBER
+cp .env.example .env    # fill in ANTHROPIC_API_KEY, TIMEZONE, PAIRING_NUMBER, OWNER_NUMBER
 npm install
 npm run dev
 ```
 
-The console prints a pairing code. On your phone go to **WhatsApp > Linked devices > Link a device > Link with phone number instead** and enter it. If `PAIRING_NUMBER` is empty, it prints a QR code to scan instead. The session is saved in `data/`, so you only link once.
+The console prints a pairing code. On the phone with the bot's number, go to **WhatsApp > Linked devices > Link a device > Link with phone number instead** and enter it. If `PAIRING_NUMBER` is empty, it prints a QR code to scan instead. The session is saved in `data/`, so you only link once.
 
-Then open your "Message yourself" chat and send `/help`.
+Then send `/help` to the bot from your own WhatsApp (or to your "Message yourself" chat in self-chat mode).
 
 ## Deploy (Railway)
 
